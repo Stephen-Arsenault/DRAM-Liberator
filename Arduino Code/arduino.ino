@@ -1,40 +1,37 @@
-/*  _
-** |_|___ ___
-** | |_ -|_ -|
-** |_|___|___|
-**  iss(c)2020
-**
-**  public site: https://forum.defence-force.org/viewtopic.php?f=9&t=1699
-**
-**  Updated: 2020.10.05 - fixed bit operation - @john
-**           2020.10.29 - fixed more bit operation - @thekorex
+/*
+* Code based on DRAM Tester: https://github.com/abzman/DRAM-tester
+* 
+* This code is for the DRAM Liberator by Stephen Arsenault
+* https://github.com/Stephen-Arsenault/DRAM-Liberator
+* 
+* License: CC BY-SA 4.0
 */
 
 /* ================================================================== */
 #include <SoftwareSerial.h>
 
-#define DI          15  // PC1
-#define DO           8  // PB0
-#define CAS          9  // PB1
-#define RAS         17  // PC3
-#define WE          16  // PC2
+#define DI          15
+#define DO           8
+#define CAS          9
+#define RAS         17
+#define WE          16
 
-#define XA0         18  // PC4
-#define XA1          2  // PD2
-#define XA2         19  // PC5
-#define XA3          6  // PD6
-#define XA4          5  // PD5
-#define XA5          4  // PD4
-#define XA6          7  // PD7
-#define XA7          3  // PD3
-#define XA8         14  // PC0
+#define XA0         18
+#define XA1          2
+#define XA2         19
+#define XA3          6
+#define XA4          5
+#define XA5          4
+#define XA6          7
+#define XA7          3
+#define XA8         A6
 
-#define M_TYPE      10  // PB2
-#define R_LED       11  // PB3
-#define G_LED       12  // PB4
+#define M_TYPE      13
+#define R_LED       12
+#define G_LED       11
 
-#define RXD          0  // PD0
-#define TXD          1  // PD1
+#define RXD          0
+#define TXD          1
 
 #define BUS_SIZE     9
 
