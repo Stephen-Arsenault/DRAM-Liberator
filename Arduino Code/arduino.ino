@@ -24,7 +24,7 @@
 #define XA5          4
 #define XA6          7
 #define XA7          3
-#define XA8         A6
+#define XA8         14
 
 #define M_TYPE      13
 #define R_LED       12
