@@ -5,7 +5,7 @@
 
 The DRAM Liberator is a tester for 4164 and 41256 DRAM chips. The intended goal of this design is to produce a cheap, compact, and effective Open Source DRAM tester. 
 
-DRAM Liberator incorporates tab at the top which serves both to protect the USB connector while simultaneously providing a hanging point when not in use.
+DRAM Liberator incorporates a tab at the top which serves both to protect the USB connector while simultaneously providing a hanging point when not in use.
 
 ### Parts
 Assembly of the DRAM Liberator is straight forward:
