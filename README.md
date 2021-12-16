@@ -42,9 +42,9 @@ This project was inspired by expensive testers on eBay. If you appreciate this w
  - Special thank you to the Open Retro SCSI [discord server](https://discord.gg/5AtypUqFCT) for providing a great community to discuss and explore retro computing.
 
 <p float="left">
-  <img src="https://github.com/Stephen-Arsenault/DRAM-Liberator/blob/main/Images/assembly_1.jpg?raw=true" width="300" />
-  <img src="https://github.com/Stephen-Arsenault/DRAM-Liberator/blob/main/Images/assembly_2.jpg?raw=true" width="300" /> 
-  <img src="https://github.com/Stephen-Arsenault/DRAM-Liberator/blob/main/Images/assembly_3.jpg?raw=true" width="300" />
+  <img src="https://github.com/Stephen-Arsenault/DRAM-Liberator/blob/main/Images/assembly_1.jpg?raw=true" width="250" />
+  <img src="https://github.com/Stephen-Arsenault/DRAM-Liberator/blob/main/Images/assembly_2.jpg?raw=true" width="250" /> 
+  <img src="https://github.com/Stephen-Arsenault/DRAM-Liberator/blob/main/Images/assembly_3.jpg?raw=true" width="250" />
   <br/>
 	<i>Images generously provided by Eric Helgeson</i>
 </p>
