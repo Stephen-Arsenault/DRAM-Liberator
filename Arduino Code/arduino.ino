@@ -24,7 +24,7 @@
 #define XA5          4
 #define XA6          7
 #define XA7          3
-#define XA8         A6
+#define XA8         14
 
 #define M_TYPE      13
 #define R_LED       12
@@ -37,6 +37,9 @@
 
 /* ================================================================== */
 volatile int bus_size;
+
+int writeAverage = 0;
+int readAverage = 0;
 
 //SoftwareSerial USB(RXD, TXD);
 
@@ -53,6 +56,7 @@ void setBus(unsigned int a) {
 }
 
 void writeAddress(unsigned int r, unsigned int c, int v) {
+  unsigned long startWrite = micros();
   /* row */
   setBus(r);
   digitalWrite(RAS, LOW);
@@ -70,9 +74,17 @@ void writeAddress(unsigned int r, unsigned int c, int v) {
   digitalWrite(WE, HIGH);
   digitalWrite(CAS, HIGH);
   digitalWrite(RAS, HIGH);
+  
+  unsigned int long stopWrite = micros();
+  unsigned int long currentTime = stopWrite - startWrite;
+  if (currentTime > 10000) {
+    currentTime = writeAverage;
+  }
+  writeAverage = writeAverage == 0 ? currentTime : ((writeAverage + currentTime) / 2);
 }
 
 int readAddress(unsigned int r, unsigned int c) {
+  unsigned long startRead = micros();
   int ret = 0;
 
   /* row */
@@ -88,6 +100,13 @@ int readAddress(unsigned int r, unsigned int c) {
 
   digitalWrite(CAS, HIGH);
   digitalWrite(RAS, HIGH);
+  
+  unsigned int long stopRead = micros();
+  unsigned int long currentTime = stopRead - startRead;
+  if (currentTime > 10000) {
+    currentTime = readAverage;
+  }
+  readAverage = readAverage == 0 ? currentTime : ((readAverage + currentTime) / 2);
 
   return ret;
 }
@@ -100,6 +119,7 @@ void error(int r, int c)
   interrupts();
   Serial.print(" FAILED $");
   Serial.println(a, HEX);
+  printStats();
   Serial.flush();
   while (1)
     ;
@@ -110,19 +130,11 @@ void ok(void)
   digitalWrite(R_LED, HIGH);
   digitalWrite(G_LED, LOW);
   interrupts();
-  Serial.println(" OK!");
+  Serial.println(" DRAM Memory Passed ");
+  printStats();
   Serial.flush();
   while (1)
     ;
-}
-
-void blink(void)
-{
-  digitalWrite(G_LED, LOW);
-  digitalWrite(R_LED, LOW);
-  delay(1000);
-  digitalWrite(R_LED, HIGH);
-  digitalWrite(G_LED, HIGH);
 }
 
 void green(int v) {
@@ -141,7 +153,6 @@ void fill(int v) {
     }
     g ^= 1;
   }
-  blink();
 }
 
 void fillx(int v) {
@@ -157,18 +168,18 @@ void fillx(int v) {
     }
     g ^= 1;
   }
-  blink();
 }
 
 void setup() {
   int i;
 
+  delay(1000);
   Serial.begin(9600);
   while (!Serial)
     ; /* wait */
 
   Serial.println();
-  Serial.print("DRAM TESTER ");
+  Serial.print("DRAM TESTER Rev1: ");
 
   for (i = 0; i < BUS_SIZE; i++)
     pinMode(a_bus[i], OUTPUT);
@@ -194,11 +205,11 @@ void setup() {
   if (digitalRead(M_TYPE)) {
     /* jumper not set - 41256 */
     bus_size = BUS_SIZE;
-    Serial.print("256Kx1 ");
+    Serial.println("256Kx1 ");
   } else {
     /* jumper set - 4164 */
     bus_size = BUS_SIZE - 1;
-    Serial.print("64Kx1 ");
+    Serial.println("64Kx1 ");
   }
   Serial.flush();
 
@@ -214,10 +225,18 @@ void setup() {
   digitalWrite(G_LED, HIGH);
 }
 
+void printStats() {
+  Serial.println((String)"Columns — Read AVG: " + readAverage + " micros / Write AVG: "+writeAverage+" micros");
+}
+
 void loop() {
-  interrupts(); Serial.print("."); Serial.flush(); noInterrupts(); fillx(0);
-  interrupts(); Serial.print("."); Serial.flush(); noInterrupts(); fillx(1);
-  interrupts(); Serial.print("."); Serial.flush(); noInterrupts(); fill(0);
-  interrupts(); Serial.print("."); Serial.flush(); noInterrupts(); fill(1);
+  unsigned int long dramTimerStart = micros();
+  interrupts(); Serial.println("Test: Write \"0\" & Verify Read"); Serial.flush(); noInterrupts(); fillx(0);
+  interrupts(); Serial.println("Test: Write \"1\" & Verify Read"); Serial.flush(); noInterrupts(); fillx(1);
+  interrupts(); Serial.println("Test: Write \"0\" then \"1\" and Verify Read"); Serial.flush(); noInterrupts(); fill(0);
+  interrupts(); Serial.println("Test: Write \"1\" then \"0\" and Verify Read"); Serial.flush(); noInterrupts(); fill(1);
+  unsigned int long dramTimerStop = micros();
+  unsigned int long dramTimerDuration = dramTimerStop - dramTimerStart;
+  interrupts(); Serial.println((String)"Total Test Duration: " + (dramTimerDuration / 1000) + " ms"); Serial.flush(); noInterrupts();
   ok();
 }
