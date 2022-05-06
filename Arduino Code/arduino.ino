@@ -71,12 +71,12 @@ void writeAddress(unsigned int r, unsigned int c, int v) {
   setBus(c);
   digitalWrite(CAS, LOW);
 
+  unsigned int long currentTime = micros() - startWrite;
+
   digitalWrite(WE, HIGH);
   digitalWrite(CAS, HIGH);
   digitalWrite(RAS, HIGH);
   
-  unsigned int long stopWrite = micros();
-  unsigned int long currentTime = stopWrite - startWrite;
   if (currentTime > 10000) {
     currentTime = writeAverage;
   }
@@ -98,11 +98,11 @@ int readAddress(unsigned int r, unsigned int c) {
   /* get current value */
   ret = digitalRead(DO);
 
+  unsigned int long currentTime = micros() - startRead;
+
   digitalWrite(CAS, HIGH);
   digitalWrite(RAS, HIGH);
   
-  unsigned int long stopRead = micros();
-  unsigned int long currentTime = stopRead - startRead;
   if (currentTime > 10000) {
     currentTime = readAverage;
   }
@@ -173,7 +173,7 @@ void fillx(int v) {
 void setup() {
   int i;
 
-  delay(1000);
+  delay(500);
   Serial.begin(9600);
   while (!Serial)
     ; /* wait */
